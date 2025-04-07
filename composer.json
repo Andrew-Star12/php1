@@ -1,0 +1,22 @@
+{
+    "name": "star/php1",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andrew-Star12",
+            "email": "andrejstarovojtov22@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.4 | ^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Src\\": "core/Src/",
+            "": "app/"
+        }
+    }
+
+}
