@@ -1,7 +1,8 @@
 <section  class="d-f content-main">
     <div class="employee">
         <h2>Педагогический состав</h2>
-        <a class="create-employee" href="<?= app()->route->getUrl('/employee/create') ?>">Добавить сотрудника</a>
+        <a class="create-employee" href="<?= app()->route->getUrl('/employee/create') ?>">Добавить сотрудника</a><br>
+        <a class="create-employee" href="<?= app()->route->getUrl('/employees') ?>">Список сотрудников</a>
     </div>
     <div></div>
     <div></div>

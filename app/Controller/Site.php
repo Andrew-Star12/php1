@@ -94,8 +94,14 @@ class Site
         }
     }
 
+    public function listEmployees(Request $request): string
+    {
+        // Получаем всех сотрудников
+        $employees = Employee::all();
 
-
+        // Отображаем представление с сотрудниками
+        return new View('site.list_employees', ['employees' => $employees]);
+    }
 
 
 }
