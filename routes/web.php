@@ -11,3 +11,6 @@ Route::add('GET', '/logout', [Controller\Site::class, 'logout']);
 Route::add('GET', '/employee/create', [Controller\Site::class, 'createEmployee']);
 Route::add('POST', '/employee/create', [Controller\Site::class, 'storeEmployee']);
 Route::add('GET', '/employees', [Controller\Site::class, 'listEmployees']);
+Route::add('GET', '/department/create', [Controller\Site::class, 'createDepartment']);
+Route::add('POST', '/department/create', [Controller\Site::class, 'storeDepartment']);
+Route::add('GET', '/departments', [Controller\Site::class, 'listDepartments']);

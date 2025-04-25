@@ -8,6 +8,7 @@ use Src\Request;
 use Model\User;
 use Src\Auth\Auth;
 use Model\Employee;
+use Model\Department;
 class Site
 {
     public function index(Request $request): string
@@ -50,11 +51,8 @@ class Site
 
     public function createEmployee(Request $request): string
     {
-        // Если есть сообщение в запросе (например, после успешного добавления сотрудника)
-        $message = $request->get('message', '');
-
         // Передаем сообщение в представление
-        return new View('site.create_employee', ['message' => $message]);
+        return new View('site.create_employee');
     }
 
     public function storeEmployee(Request $request): void
@@ -85,7 +83,7 @@ class Site
             // Сохраняем в базе данных
             if ($employee->save()) {
                 // Редирект на страницу списка сотрудников
-                app()->route->redirect('/hello');
+                app()->route->redirect('/employees');
             } else {
                 // Если ошибка при добавлении, выводим сообщение
                 $message = 'Ошибка при добавлении сотрудника!';
@@ -102,6 +100,43 @@ class Site
         // Отображаем представление с сотрудниками
         return new View('site.list_employees', ['employees' => $employees]);
     }
+
+    public function createDepartment(Request $request): string
+    {
+        $message = $request->get('message', '');
+        return new View('site.create_department', ['message' => $message]);
+    }
+
+    public function storeDepartment(Request $request): void
+    {
+        if ($request->method === 'POST') {
+            $data = $request->all();
+
+            if (empty($data['DepartmentName'])) {
+                echo new View('site.create_department', ['message' => 'Название кафедры обязательно!']);
+                return;
+            }
+
+            $department = new Department();
+            $department->DepartmentName = $data['DepartmentName'];
+
+            if ($department->save()) {
+                app()->route->redirect('/departments');
+            } else {
+                echo new View('site.create_department', ['message' => 'Ошибка при добавлении кафедры!']);
+            }
+        }
+    }
+
+    public function listDepartments(Request $request): string
+    {
+        // Получаем все кафедры из базы данных
+        $departments = Department::all();
+
+        // Передаем данные в представление для отображения
+        return new View('site.list_departments', ['departments' => $departments]);
+    }
+
 
 
 }
