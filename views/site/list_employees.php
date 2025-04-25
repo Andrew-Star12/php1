@@ -12,6 +12,7 @@
                 <th>Дата рождения</th>
                 <th>Адрес</th>
                 <th>Должность</th>
+                <th>Кафедры</th> <!-- добавлено -->
             </tr>
             </thead>
             <tbody>
@@ -24,6 +25,15 @@
                     <td><?= $employee->DateOfBirth ?></td>
                     <td><?= $employee->Address ?></td>
                     <td><?= $employee->Position ?></td>
+                    <td>
+                        <?php if (!empty($employee->departments)): ?>
+                            <?php foreach ($employee->departments as $dept): ?>
+                                <?= $dept->DepartmentName ?><br>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <em>Нет кафедр</em>
+                        <?php endif; ?>
+                    </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

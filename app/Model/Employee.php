@@ -25,4 +25,10 @@ class Employee extends Model
         'Position',
         'DateOfBirth'
     ];
+
+    // Связь многие ко многим с таблицей кафедр
+    public function departments()
+    {
+        return $this->belongsToMany(Department::class, 'employee_department', 'employee_id', 'department_id');
+    }
 }

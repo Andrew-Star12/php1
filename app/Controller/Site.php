@@ -51,55 +51,59 @@ class Site
 
     public function createEmployee(Request $request): string
     {
-        // Передаем сообщение в представление
-        return new View('site.create_employee');
+        $departments = Department::all(); // получаем кафедры из БД
+
+        return new View('site.create_employee', [
+            'departments' => $departments
+        ]);
     }
 
     public function storeEmployee(Request $request): void
     {
         if ($request->method === 'POST') {
-            // Получаем данные из формы
-            $data = $request->all();  // Получаем все данные
+            $data = $request->all();
 
-            // Валидируем данные
             if (empty($data['FirstName']) || empty($data['LastName'])) {
-                // Формируем сообщение об ошибке, если имя или фамилия не заполнены
                 $message = 'Имя и фамилия обязательны!';
-                // Отображаем форму с сообщением об ошибке
                 echo new View('site.create_employee', ['message' => $message]);
                 return;
             }
 
-            // Создаем нового сотрудника
+            // Создание сотрудника
             $employee = new Employee();
             $employee->FirstName = $data['FirstName'];
             $employee->LastName = $data['LastName'];
-            $employee->Patronymic = $data['Patronymic'] ?? '';  // Если отчество не заполнено, оставляем пустым
+            $employee->Patronymic = $data['Patronymic'] ?? '';
             $employee->Gender = $data['Gender'];
             $employee->DateOfBirth = $data['DateOfBirth'];
-            $employee->Address = $data['Address'] ?? '';  // Если адрес не заполнен, оставляем пустым
-            $employee->Position = $data['Position'] ?? '';  // Если должность не заполнена, оставляем пустым
+            $employee->Address = $data['Address'] ?? '';
+            $employee->Position = $data['Position'] ?? '';
 
-            // Сохраняем в базе данных
+            // Сохраняем сотрудника
             if ($employee->save()) {
-                // Редирект на страницу списка сотрудников
+                //  Привязка к кафедрам
+                if (!empty($data['departments'])) {
+                    $employee->departments()->sync($data['departments']);
+                }
+
+                // Редирект
                 app()->route->redirect('/employees');
             } else {
-                // Если ошибка при добавлении, выводим сообщение
                 $message = 'Ошибка при добавлении сотрудника!';
                 echo new View('site.create_employee', ['message' => $message]);
             }
         }
     }
 
+
     public function listEmployees(Request $request): string
     {
-        // Получаем всех сотрудников
-        $employees = Employee::all();
+        // Жадная загрузка связей
+        $employees = Employee::with('departments')->get();
 
-        // Отображаем представление с сотрудниками
         return new View('site.list_employees', ['employees' => $employees]);
     }
+
 
     public function createDepartment(Request $request): string
     {

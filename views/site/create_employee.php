@@ -19,13 +19,15 @@
         </div>
 
         <div class="form-group">
-            <label>Пол</label><br>
-            <label>
-                <input type="radio" name="Gender" value="Мужской"> Мужской
-            </label>
-            <label>
-                <input type="radio" name="Gender" value="Женский"> Женский
-            </label>
+            <label>Пол</label>
+            <div>
+                <label>
+                    <input type="radio" name="Gender" value="Мужской"> Мужской
+                </label>
+                <label>
+                    <input type="radio" name="Gender" value="Женский"> Женский
+                </label>
+            </div>
         </div>
 
         <div class="form-group">
@@ -41,6 +43,21 @@
         <div class="form-group">
             <label>Должность</label>
             <input type="text" name="Position" placeholder="Введите должность">
+        </div>
+
+        <!-- 👇 Выбор кафедр -->
+        <div class="form-group">
+            <label>Кафедры</label>
+            <select name="departments[]" multiple size="5">
+                <?php if (!empty($departments)): ?>
+                    <?php foreach ($departments as $department): ?>
+                        <option value="<?= $department->id ?>"><?= $department->DepartmentName ?></option>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <option disabled>Нет доступных кафедр</option>
+                <?php endif; ?>
+            </select><br>
+            <small>Удерживайте Ctrl (или Cmd) чтобы выбрать несколько</small>
         </div>
 
         <button class="create-button" type="submit">Создать сотрудника</button>
