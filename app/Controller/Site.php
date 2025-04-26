@@ -9,7 +9,8 @@ use Model\User;
 use Src\Auth\Auth;
 use Model\Employee;
 use Model\Department;
-class Site
+use Model\Discipline;
+class   Site
 {
     public function index(Request $request): string
     {
@@ -51,12 +52,15 @@ class Site
 
     public function createEmployee(Request $request): string
     {
-        $departments = Department::all(); // получаем кафедры из БД
+        $departments = Department::all();   // получаем кафедры
+        $disciplines = Discipline::all();   // получаем дисциплины
 
         return new View('site.create_employee', [
-            'departments' => $departments
+            'departments' => $departments,
+            'disciplines' => $disciplines
         ]);
     }
+
 
     public function storeEmployee(Request $request): void
     {
@@ -81,9 +85,14 @@ class Site
 
             // Сохраняем сотрудника
             if ($employee->save()) {
-                //  Привязка к кафедрам
+                // Привязка к кафедрам
                 if (!empty($data['departments'])) {
                     $employee->departments()->sync($data['departments']);
+                }
+
+                // ✅ Привязка к дисциплинам
+                if (!empty($data['disciplines'])) {
+                    $employee->disciplines()->sync($data['disciplines']);
                 }
 
                 // Редирект
@@ -141,6 +150,50 @@ class Site
         return new View('site.list_departments', ['departments' => $departments]);
     }
 
+    public function createDiscipline(Request $request): string
+    {
+        $employees = Employee::all(); // получаем всех сотрудников
+        return new View('site.create_discipline', ['employees' => $employees]);
+    }
+
+    public function storeDiscipline(Request $request): void
+    {
+        if ($request->method === 'POST') {
+            $data = $request->all();
+
+            if (empty($data['DisciplineName'])) {
+                echo new View('site.create_discipline', [
+                    'message' => 'Название дисциплины обязательно!',
+                    'employees' => Employee::all()
+                ]);
+                return;
+            }
+
+            $discipline = new Discipline();
+            $discipline->DisciplineName = $data['DisciplineName'];
+
+            if ($discipline->save()) {
+                if (!empty($data['employees'])) {
+                    $discipline->employees()->sync($data['employees']);
+                }
+
+                app()->route->redirect('/disciplines');
+            } else {
+                echo new View('site.create_discipline', [
+                    'message' => 'Ошибка при добавлении дисциплины!',
+                    'employees' => Employee::all()
+                ]);
+            }
+        }
+    }
+
+    public function listDisciplines(Request $request): string
+    {
+        // Получаем все дисциплины вместе с их сотрудниками
+        $disciplines = Discipline::with('employees')->get();
+
+        return new View('site.list_disciplines', ['disciplines' => $disciplines]);
+    }
 
 
 }

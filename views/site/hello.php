@@ -12,9 +12,9 @@
         <a class="create-employee" href="<?= app()->route->getUrl('/departments') ?>">Список кафедр</a>
     </div>
     <div class="department">
-        <h3>Кафедры</h3>
-        <a class="create-employee" href="<?= app()->route->getUrl('/employee/create') ?>">Добавить сотрудника</a><br>
-        <a class="create-employee" href="<?= app()->route->getUrl('/employees') ?>">Список сотрудников</a>
+        <h3>Дисциплины</h3>
+        <a class="create-employee" href="<?= app()->route->getUrl('/disciplines/create') ?>">Добавить дисциплину</a><br>
+        <a class="create-employee" href="<?= app()->route->getUrl('/disciplines') ?>">Список дисциплин</a>
     </div>
     <div></div>
 </section>

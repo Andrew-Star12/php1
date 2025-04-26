@@ -57,7 +57,21 @@
                     <option disabled>Нет доступных кафедр</option>
                 <?php endif; ?>
             </select><br>
-            <small>Удерживайте Ctrl (или Cmd) чтобы выбрать несколько</small>
+            <p style="font-size: 0.9em;">* Зажмите Ctrl (или Cmd на Mac), чтобы выбрать несколько</p>
+        </div>
+
+        <div class="form-group">
+            <label>Дисциплины</label>
+            <select name="disciplines[]" multiple size="5">
+                <?php if (!empty($disciplines)): ?>
+                    <?php foreach ($disciplines as $discipline): ?>
+                        <option value="<?= $discipline->id ?>"><?= $discipline->DisciplineName ?></option>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <option disabled>Нет доступных дисциплин</option>
+                <?php endif; ?>
+            </select>
+            <p style="font-size: 0.9em;">* Зажмите Ctrl (или Cmd на Mac), чтобы выбрать несколько</p>
         </div>
 
         <button class="create-button" type="submit">Создать сотрудника</button>
