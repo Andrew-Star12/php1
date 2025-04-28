@@ -90,7 +90,7 @@ class   Site
                     $employee->departments()->sync($data['departments']);
                 }
 
-                // ✅ Привязка к дисциплинам
+                //  Привязка к дисциплинам
                 if (!empty($data['disciplines'])) {
                     $employee->disciplines()->sync($data['disciplines']);
                 }
@@ -110,14 +110,15 @@ class   Site
         // Жадная загрузка связей
         $employees = Employee::with('departments')->get();
 
+
         return new View('site.list_employees', ['employees' => $employees]);
     }
 
 
     public function createDepartment(Request $request): string
     {
-        $message = $request->get('message', '');
-        return new View('site.create_department', ['message' => $message]);
+        $employees = Employee::all();
+        return new View('site.create_department', ['employees' => $employees]);
     }
 
     public function storeDepartment(Request $request): void
@@ -190,7 +191,7 @@ class   Site
     public function listDisciplines(Request $request): string
     {
         // Получаем все дисциплины вместе с их сотрудниками
-        $disciplines = Discipline::with('employees')->get();
+        $disciplines = Discipline::all();
 
         return new View('site.list_disciplines', ['disciplines' => $disciplines]);
     }

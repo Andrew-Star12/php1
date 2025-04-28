@@ -11,8 +11,8 @@
         </div>
 
         <div class="form-group">
-            <label for="employees">Сотрудники, ведущие дисциплину</label>
-            <select name="employees[]" id="employees" multiple size="6">
+            <label for="employees">Сотрудники кафедры</label>
+            <select name="employees[]"  multiple size="6">
                 <?php foreach ($employees as $employee): ?>
                     <option value="<?= $employee->id ?>">
                         <?= $employee->LastName . ' ' . $employee->FirstName . ' ' . $employee->Patronymic ?>

@@ -12,7 +12,8 @@
                 <th>Дата рождения</th>
                 <th>Адрес</th>
                 <th>Должность</th>
-                <th>Кафедры</th> <!-- добавлено -->
+                <th>Кафедры</th>
+                <th>Дисциплины</th> <!-- Новый столбец -->
             </tr>
             </thead>
             <tbody>
@@ -34,6 +35,15 @@
                             <em>Нет кафедр</em>
                         <?php endif; ?>
                     </td>
+                    <td>
+                        <?php if (!empty($employee->disciplines)): ?>
+                            <?php foreach ($employee->disciplines as $discipline): ?>
+                                <?= $discipline->DisciplineName ?><br>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <em>Нет дисциплин</em>
+                        <?php endif; ?>
+                    </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
@@ -42,6 +52,7 @@
         <p>Сотрудники не найдены.</p>
     <?php endif; ?>
 </section>
+
 
 <style>
     /* Общие стили для секции */
