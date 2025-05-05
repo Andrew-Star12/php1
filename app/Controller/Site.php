@@ -196,5 +196,57 @@ class   Site
         return new View('site.list_disciplines', ['disciplines' => $disciplines]);
     }
 
+    public function editEmployee( int $id, Request $request): string
+    {
+        $employee = Employee::with(['departments', 'disciplines'])->find($id);
+
+        if (!$employee) {
+            return new View('site.list_employees', ['message' => 'Сотрудник не найден']);
+        }
+
+        $departments = Department::all();
+        $disciplines = Discipline::all();
+
+        return new View('site.edit_employee', [
+            'employee' => $employee,
+            'departments' => $departments,
+            'disciplines' => $disciplines
+        ]);
+    }
+
+    public function updateEmployee(int $id, Request $request): void
+    {
+        if ($request->method === 'POST') {
+            $employee = Employee::find($id);
+            if (!$employee) {
+                echo new View('site.list_employees', ['message' => 'Сотрудник не найден']);
+                return;
+            }
+
+            $data = $request->all();
+
+            $employee->FirstName = $data['FirstName'];
+            $employee->LastName = $data['LastName'];
+            $employee->Patronymic = $data['Patronymic'] ?? '';
+            $employee->Gender = $data['Gender'];
+            $employee->DateOfBirth = $data['DateOfBirth'];
+            $employee->Address = $data['Address'] ?? '';
+            $employee->Position = $data['Position'] ?? '';
+
+            if ($employee->save()) {
+                // Обновляем связи
+                $employee->departments()->sync($data['departments'] ?? []);
+                $employee->disciplines()->sync($data['disciplines'] ?? []);
+
+                app()->route->redirect('/employees');
+            } else {
+                echo new View('site.edit_employee', [
+                    'employee' => $employee,
+                    'message' => 'Ошибка при сохранении!'
+                ]);
+            }
+        }
+    }
+
 
 }

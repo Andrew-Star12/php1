@@ -17,5 +17,8 @@ Route::add('GET', '/departments', [Controller\Site::class, 'listDepartments']);
 Route::add('GET', '/disciplines/create', [Controller\Site::class, 'createDiscipline']);
 Route::add('POST', '/disciplines/create', [Controller\Site::class, 'storeDiscipline']);
 Route::add('GET', '/disciplines', [Controller\Site::class, 'listDisciplines']);
+Route::add('GET', '/employee/edit/{id}', [Controller\Site::class, 'editEmployee']);
+Route::add('POST', '/employee/update/{id}', [Controller\Site::class, 'updateEmployee']);
+
 
 
