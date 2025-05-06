@@ -108,8 +108,7 @@ class   Site
     public function listEmployees(Request $request): string
     {
         // Жадная загрузка связей
-        $employees = Employee::with('departments')->get();
-
+        $employees = Employee::with('departments')->orderBy('LastName')->get();
 
         return new View('site.list_employees', ['employees' => $employees]);
     }
@@ -117,7 +116,7 @@ class   Site
 
     public function createDepartment(Request $request): string
     {
-        $employees = Employee::all();
+        $employees = Employee::orderBy('LastName')->get();
         return new View('site.create_department', ['employees' => $employees]);
     }
 
@@ -135,12 +134,18 @@ class   Site
             $department->DepartmentName = $data['DepartmentName'];
 
             if ($department->save()) {
+                // Привязка сотрудников
+                if (!empty($data['employees'])) {
+                    $department->employees()->sync($data['employees']);
+                }
+
                 app()->route->redirect('/departments');
             } else {
                 echo new View('site.create_department', ['message' => 'Ошибка при добавлении кафедры!']);
             }
         }
     }
+
 
     public function listDepartments(Request $request): string
     {
@@ -243,6 +248,85 @@ class   Site
                 echo new View('site.edit_employee', [
                     'employee' => $employee,
                     'message' => 'Ошибка при сохранении!'
+                ]);
+            }
+        }
+    }
+    public function editDiscipline(int $id, Request $request): string
+    {
+        $discipline = Discipline::with('employees')->find($id);
+        if (!$discipline) {
+            return new View('site.list_disciplines', ['message' => 'Дисциплина не найдена']);
+        }
+
+        $employees = Employee::all();
+        return new View('site.edit_discipline', [
+            'discipline' => $discipline,
+            'employees' => $employees
+        ]);
+    }
+
+    public function updateDiscipline(int $id, Request $request): void
+    {
+        if ($request->method === 'POST') {
+            $discipline = Discipline::find($id);
+            if (!$discipline) {
+                echo new View('site.list_disciplines', ['message' => 'Дисциплина не найдена']);
+                return;
+            }
+
+            $data = $request->all();
+
+            $discipline->DisciplineName = $data['DisciplineName'];
+            if ($discipline->save()) {
+                $discipline->employees()->sync($data['employees'] ?? []);
+                app()->route->redirect('/disciplines');
+            } else {
+                echo new View('site.edit_discipline', [
+                    'discipline' => $discipline,
+                    'employees' => Employee::all(),
+                    'message' => 'Ошибка при сохранении дисциплины!'
+                ]);
+            }
+        }
+    }
+
+    public function editDepartment(int $id, Request $request): string
+    {
+        $department = Department::with('employees')->find($id);
+
+        if (!$department) {
+            return new View('site.list_departments', ['message' => 'Кафедра не найдена']);
+        }
+
+        $employees = Employee::orderBy('LastName')->get(); // отсортируем по фамилии
+
+        return new View('site.edit_department', [
+            'department' => $department,
+            'employees' => $employees
+        ]);
+    }
+
+    public function updateDepartment(int $id, Request $request): void
+    {
+        if ($request->method === 'POST') {
+            $department = Department::find($id);
+            if (!$department) {
+                echo new View('site.list_departments', ['message' => 'Кафедра не найдена']);
+                return;
+            }
+
+            $data = $request->all();
+            $department->DepartmentName = $data['DepartmentName'];
+
+            if ($department->save()) {
+                $department->employees()->sync($data['employees'] ?? []);
+                app()->route->redirect('/departments');
+            } else {
+                echo new View('site.edit_department', [
+                    'department' => $department,
+                    'employees' => Employee::all(),
+                    'message' => 'Ошибка при сохранении кафедры!'
                 ]);
             }
         }

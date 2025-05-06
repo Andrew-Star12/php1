@@ -5,7 +5,10 @@
         <div class="department-list">
             <?php foreach ($departments as $department): ?>
                 <div class="department-card">
-                    <h3><?= $department->DepartmentName ?></h3>
+                    <div class="card-header">
+                        <h3><?= $department->DepartmentName ?></h3>
+                        <a class="edit-button" href="<?= app()->route->getUrl('/department/edit/' . $department->id) ?>">Редактировать</a>
+                    </div>
                     <p><strong>Сотрудники:</strong></p>
 
                     <?php if (count($department->employees) > 0): ?>
@@ -86,5 +89,26 @@
         font-style: italic;
         margin-top: 10px;
     }
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .edit-button {
+        font-size: 14px;
+        color: #2980b9;
+        text-decoration: none;
+        padding: 6px 10px;
+        border: 1px solid #2980b9;
+        border-radius: 4px;
+        transition: 0.2s;
+    }
+
+    .edit-button:hover {
+        background-color: #2980b9;
+        color: white;
+    }
+
 </style>
 

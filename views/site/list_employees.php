@@ -5,44 +5,40 @@
         <table>
             <thead>
             <tr>
-                <th>Имя</th>
                 <th>Фамилия</th>
+                <th>Имя</th>
                 <th>Отчество</th>
                 <th>Пол</th>
                 <th>Дата рождения</th>
                 <th>Адрес</th>
                 <th>Должность</th>
                 <th>Кафедры</th>
-                <th>Дисциплины</th> <!-- Новый столбец -->
+                <th>Дисциплины</th>
+                <th>Действия</th> <!-- Новый столбец -->
             </tr>
             </thead>
             <tbody>
             <?php foreach ($employees as $employee): ?>
                 <tr>
-                    <td><?= $employee->FirstName ?></td>
                     <td><?= $employee->LastName ?></td>
+                    <td><?= $employee->FirstName ?></td>
                     <td><?= $employee->Patronymic ?></td>
                     <td><?= $employee->Gender ?></td>
                     <td><?= $employee->DateOfBirth ?></td>
                     <td><?= $employee->Address ?></td>
                     <td><?= $employee->Position ?></td>
                     <td>
-                        <?php if (!empty($employee->departments)): ?>
-                            <?php foreach ($employee->departments as $dept): ?>
-                                <?= $dept->DepartmentName ?><br>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <em>Нет кафедр</em>
-                        <?php endif; ?>
+                        <?php foreach ($employee->departments as $dept): ?>
+                            <?= $dept->DepartmentName ?><br>
+                        <?php endforeach; ?>
                     </td>
                     <td>
-                        <?php if (!empty($employee->disciplines)): ?>
-                            <?php foreach ($employee->disciplines as $discipline): ?>
-                                <?= $discipline->DisciplineName ?><br>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <em>Нет дисциплин</em>
-                        <?php endif; ?>
+                        <?php foreach ($employee->disciplines as $discipline): ?>
+                            <?= $discipline->DisciplineName ?><br>
+                        <?php endforeach; ?>
+                    </td>
+                    <td>
+                        <a class="edit-button" href="<?= app()->route->getUrl('/employee/edit/' . $employee->id) ?>">Редактировать</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -111,11 +107,25 @@
         cursor: pointer;
     }
 
-    /* Добавление стилей для пустого состояния */
     p {
         text-align: center;
         color: #e74c3c;
         font-size: 18px;
         font-weight: bold;
     }
+
+    .edit-button {
+        background-color: #207d6c;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+
+    .edit-button:hover {
+        background-color: #1e8449;
+    }
+
 </style>
